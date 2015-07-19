@@ -2,12 +2,13 @@ import re
 
 class Course:
     "Template for course using data from text file"
-    def __init__(self, name, desc, course_id, prereqs, off_w):
+    def __init__(self, name, desc, course_id, prereqs, off_w, level):
         self.name = name
         self.course_id = course_id
         self.prereqs = prereqs
         self.off_w = off_w
         self.desc = desc
+        self.level = level
 
 #empty list for all Course objects
 courses = []
@@ -30,8 +31,10 @@ with open("raw-data.txt", "r") as f:
             
             #finding and assigning description
             desc = next_line[:prereq_ind]
-
-
+            
+            #assigning level
+            level = line[4:5]
+            
             #starting search for prereqs
             prereqs = []
             #checking to see if any prereq's exist
@@ -67,12 +70,11 @@ with open("raw-data.txt", "r") as f:
                         for j in p.findall(i):
                             prereqs.append(j)
 
-            courses.append(Course(name, desc, course_id, prereqs, off_w))            
+            courses.append(Course(name, desc, course_id, prereqs, off_w, level))            
 
                            
-
-
-
+    
+    
 
 
         

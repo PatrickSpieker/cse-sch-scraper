@@ -1,8 +1,10 @@
 import re
 from pprint import pprint
+import networkx as nx
+import matplotlib.pyplot as plt
 
 class Course:
-    "Template for course using data from text file"
+    """Template for course using data from text file"""
     def __init__(self, name, desc, course_id, prereqs, off_w, level):
         self.name = name
         self.course_id = course_id
@@ -73,14 +75,26 @@ with open("raw-data.txt", "r") as f:
 
             courses.append(Course(name, desc, course_id, prereqs, off_w, level))            
 
+G = nx.Graph()
 g = {}
 for course in courses:
     if course.prereqs == None:
-        g[course.course_id] = []
+        #g[course.course_id] = []
+        #adding a node for each course w/o prereq
+        G.add_node(course.course_id)
     else:
-        g[course.course_id] = course.prereqs
+        #g[course.course_id] = course.prereqs
+        #adding a node for each course w/ prereq
+        G.add_node(course.course_id)
+        for prereq in course.prereqs:
+            #catching unhashable list error
+            try:
+                G.add_edge(course.course_id, prereq)
+            except:
+                pass
 
-pprint(g)
+nx.draw(G)
+plt.show()
 
 
 

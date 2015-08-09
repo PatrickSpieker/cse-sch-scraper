@@ -82,16 +82,30 @@ with open("raw-data.txt", "r") as f:
 
             courses.append(Course(name, desc, course_id, prereqs, off_w, level))            
 
-G = nx.DiGraph()
+G = nx.Graph()
+for course in courses:
+    print course.course_id + ": " + str(course.prereqs)
 
 for course in courses:
-    if course.prereqs != None: 
+    if course.prereqs:
         for prereq in course.prereqs:
-            G.add_edge(prereq, course.course_id)
-nx.shell_layout(G)
-nx.draw(G)
+            G.add_edge(prereq, course.course_id, weight=0.01)
 
+pos = nx.circular_layout(G)
+
+#drawing nodes
+nx.draw_networkx_nodes(G,pos, node_size=700)
+
+#drawing edges
+nx.draw_networkx_edges(G, pos, edgelist=G.edges(data=True), width=1)
+
+#labels
+nx.draw_networkx_labels(G, pos, font_size=6, font_family='sans-serif')
+
+plt.axis("off")
 plt.show()
+
+
 
 
 

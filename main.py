@@ -44,6 +44,7 @@ with open("raw-data.txt", "r") as f:
             #no they don't
             if prereq_ind == -1:
                 prereqs = None
+                #off_w is offered with
                 off_w = None
             #yes they do
             else:
@@ -59,41 +60,37 @@ with open("raw-data.txt", "r") as f:
                 else:
                     #if they don't, connect this with correct variable
                     off_w = None
+
                 #splitting into each seperate prereq
                 prereq_split = prereq_raw.split(";")
                 #iterating through and regexing out excess
                 for i in prereq_split:
                     if "or" in i:
                         p = re.compile("[A-Z].[A-Z]{1,3}\s\d\d\d")
-                        #append the ENTIRE list of options to the prereq list
-                        prereqs.append(p.findall(i))
+                        #append the ENTIRE tuple of options to the prereq list
+                        p_tup = tuple(p.findall(i))
+                        prereqs.append(p_tup)
+                        #the prereq list is tuple-ified at the end of the process
                     else:
                         p = re.compile("[A-Z].[A-Z]{1,3}\s\d\d\d")
                         #append EACH ITEM from the list of options
                         for j in p.findall(i):
                             prereqs.append(j)
 
+                #making prereqs immutable via tuple
+                prereqs = tuple(prereqs)
+
             courses.append(Course(name, desc, course_id, prereqs, off_w, level))            
 
-G = nx.Graph()
-g = {}
-for course in courses:
-    if course.prereqs == None:
-        #g[course.course_id] = []
-        #adding a node for each course w/o prereq
-        G.add_node(course.course_id)
-    else:
-        #g[course.course_id] = course.prereqs
-        #adding a node for each course w/ prereq
-        G.add_node(course.course_id)
-        for prereq in course.prereqs:
-            #catching unhashable list error
-            try:
-                G.add_edge(course.course_id, prereq)
-            except:
-                pass
+G = nx.DiGraph()
 
+for course in courses:
+    if course.prereqs != None: 
+        for prereq in course.prereqs:
+            G.add_edge(prereq, course.course_id)
+nx.shell_layout(G)
 nx.draw(G)
+
 plt.show()
 
 

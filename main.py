@@ -17,7 +17,7 @@ class Course:
 courses = []
 
 #opening file
-with open("raw-data.txt", "r") as f:
+with open("data/raw-data.txt", "r") as f:
     for line in f:
         #finding lines with title of course 
         if line[0:3] == "CSE":
@@ -83,8 +83,8 @@ with open("raw-data.txt", "r") as f:
             courses.append(Course(name, desc, course_id, prereqs, off_w, level))            
 
 G = nx.Graph()
-#for course in courses:
-#    print course.course_id + ": " + str(course.prereqs)
+for course in courses:
+    print course.course_id + ": " + str(course.prereqs)
 
 #options edges
 opt_edge = []

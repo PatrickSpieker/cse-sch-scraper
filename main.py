@@ -83,15 +83,36 @@ with open("raw-data.txt", "r") as f:
             courses.append(Course(name, desc, course_id, prereqs, off_w, level))            
 
 G = nx.Graph()
-for course in courses:
-    print course.course_id + ": " + str(course.prereqs)
+#for course in courses:
+#    print course.course_id + ": " + str(course.prereqs)
 
+#options edges
+opt_edge = []
+
+#required edges
+req_edge = []
+
+#connecting courses with prereqs
 for course in courses:
+    #checking for prereqs
     if course.prereqs:
         for prereq in course.prereqs:
-            G.add_edge(prereq, course.course_id, weight=0.01)
+            #determining whether there are prereq options (in a tuple)
+            if type(prereq) is tuple:
+                #looping through the ACTUAL prereq courses inside tuple
+                for act_prereq in prereq:
+                    #adding edge to graph
+                    G.add_edge(act_prereq, course.course_id)
+                    #adding edge to list for later formatting
+                    opt_edge.append((act_prereq, course.course_id))
+            else:
+                #adding edge to graph
+                G.add_edge(prereq, course.course_id)
+                #adding edge to list for later formatting
+                req_edge.append((prereq, course.course_id))
+            
 
-pos = nx.circular_layout(G)
+pos = nx.spring_layout(G)
 
 #drawing nodes
 nx.draw_networkx_nodes(G,pos, node_size=700)

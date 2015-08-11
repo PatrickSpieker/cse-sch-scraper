@@ -117,9 +117,11 @@ pos = nx.spring_layout(G)
 #drawing nodes
 nx.draw_networkx_nodes(G,pos, node_size=700)
 
-#drawing edges
-nx.draw_networkx_edges(G, pos, edgelist=G.edges(data=True), width=1)
-
+#drawing required edges
+nx.draw_networkx_edges(G, pos, edgelist=req_edge, width=1)
+#drawing edges connecting prereqs with options
+nx.draw_networkx_edges(G, pos, edgelist=opt_edge, width=0.6,
+                        edge_color="b", style="dashed")
 #labels
 nx.draw_networkx_labels(G, pos, font_size=6, font_family='sans-serif')
 

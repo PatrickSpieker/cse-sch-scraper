@@ -90,7 +90,8 @@ with open("data/raw-data.txt", "r") as f:
 #==========================
 
 #instantiating graph with pgv
-G = pgv.AGraph(directed=True, overlap = False)
+G = pgv.AGraph(directed=True, overlap = False, splines="polyline",
+                nodesep=0.5, sep = +0.25)
 
 
 #connecting courses with prereqs
@@ -106,7 +107,7 @@ for course in courses:
                     G.add_edge(act_prereq, course.course_id)
                     #formatting edge
                     e = G.get_edge(act_prereq, course.course_id)
-                    e.attr["color"] = "blue"
+                    e.attr["color"] = "red"
                     for node in (act_prereq, course.course_id):
                         n = G.get_node(node)
                         n.attr["fontsize"] = 8.0
@@ -123,6 +124,6 @@ for course in courses:
                     
 
 G.layout()
-G.draw("mygraph.png")
+G.draw("degree_graph.png")
 
 

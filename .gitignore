@@ -58,3 +58,6 @@ target/
 
 #Virtualenv
 venv/
+
+#Repo specific
+degree_graph.png

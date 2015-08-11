@@ -1,7 +1,7 @@
 import re
 from pprint import pprint
-import networkx as nx
-import matplotlib.pyplot as plt
+import pygraphviz as pgv
+
 
 class Course:
     """Template for course using data from text file"""
@@ -82,15 +82,16 @@ with open("data/raw-data.txt", "r") as f:
 
             courses.append(Course(name, desc, course_id, prereqs, off_w, level))            
 
-G = nx.Graph()
-for course in courses:
-    print course.course_id + ": " + str(course.prereqs)
+#print testing
+#for course in courses:
+#    print course.course_id + ": " + str(course.prereqs)
 
-#options edges
-opt_edge = []
+#Use of constructed data below 
+#==========================
 
-#required edges
-req_edge = []
+#instantiating graph with pgv
+G = pgv.AGraph(directed=True, overlap = False)
+
 
 #connecting courses with prereqs
 for course in courses:
@@ -103,36 +104,25 @@ for course in courses:
                 for act_prereq in prereq:
                     #adding edge to graph
                     G.add_edge(act_prereq, course.course_id)
-                    #adding edge to list for later formatting
-                    opt_edge.append((act_prereq, course.course_id))
+                    #formatting edge
+                    e = G.get_edge(act_prereq, course.course_id)
+                    e.attr["color"] = "blue"
+                    for node in (act_prereq, course.course_id):
+                        n = G.get_node(node)
+                        n.attr["fontsize"] = 8.0
             else:
                 #adding edge to graph
                 G.add_edge(prereq, course.course_id)
-                #adding edge to list for later formatting
-                req_edge.append((prereq, course.course_id))
-            
+                #formatting edge
+                e = G.get_edge(prereq, course.course_id)
+                e.attr["color"] = "black"
+                #formatting both nodes
+                for node in (prereq, course.course_id):
+                    n = G.get_node(node)
+                    n.attr["fontsize"] = 8.0
+                    
 
-pos = nx.spring_layout(G)
+G.layout()
+G.draw("mygraph.png")
 
-#drawing nodes
-nx.draw_networkx_nodes(G,pos, node_size=700)
-
-#drawing required edges
-nx.draw_networkx_edges(G, pos, edgelist=req_edge, width=1)
-#drawing edges connecting prereqs with options
-nx.draw_networkx_edges(G, pos, edgelist=opt_edge, width=0.6,
-                        edge_color="b", style="dashed")
-#labels
-nx.draw_networkx_labels(G, pos, font_size=6, font_family='sans-serif')
-
-plt.axis("off")
-plt.show()
-
-
-
-
-
-
-        
-            
 

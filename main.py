@@ -91,14 +91,20 @@ with open("data/raw-data.txt", "r") as f:
 
 #instantiating graph with pgv
 G = pgv.AGraph(directed=True, overlap = False, splines="polyline",
-                nodesep=0.5, sep = +0.25)
+                nodesep=2.0, sep = +0.25)
 
 
 #connecting courses with prereqs
 for course in courses:
     #checking for prereqs
     if course.prereqs:
+        #setting up counter to change color of edge ->
+        #(cont) if there are multiple sets of prereq options
+        sets_option = 0
+
         for prereq in course.prereqs:
+            #colors for different sets of prereq options
+            colors = ["red", "green", "blue", "purple", "orange", "pink"]
             #determining whether there are prereq options (in a tuple)
             if type(prereq) is tuple:
                 #looping through the ACTUAL prereq courses inside tuple
@@ -107,10 +113,13 @@ for course in courses:
                     G.add_edge(act_prereq, course.course_id)
                     #formatting edge
                     e = G.get_edge(act_prereq, course.course_id)
-                    e.attr["color"] = "red"
+                    #adding specific color to prereq options
+                    e.attr["color"] = colors[sets_option]
                     for node in (act_prereq, course.course_id):
                         n = G.get_node(node)
                         n.attr["fontsize"] = 8.0
+                #incrementing color option
+                sets_option += 1
             else:
                 #adding edge to graph
                 G.add_edge(prereq, course.course_id)
@@ -123,7 +132,7 @@ for course in courses:
                     n.attr["fontsize"] = 8.0
                     
 
-G.layout()
+G.layout(prog="neato")
 G.draw("degree_graph.png")
 
 

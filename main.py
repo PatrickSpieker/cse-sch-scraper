@@ -1,7 +1,10 @@
 import re
 from pprint import pprint
 import pygraphviz as pgv
-
+import requests
+import urllib
+from sys import argv
+from bs4 import BeautifulSoup
 
 class Course:
     """Template for course using data from text file"""
@@ -13,11 +16,22 @@ class Course:
         self.desc = desc
         self.level = level
 
+
+dept = str(argv[1])
+print dept.lower()
+
 #empty list for all Course objects
 courses = []
+url = "http://www.washington.edu/students/crscat/" + dept.lower() + ".html"
+print url
+#fetching HTML
+urllib.urlretrieve(url, "test.html")
+data = open("test.html","r").read()
+soup = BeautifulSoup(data, "lxml")
+links = soup.find_all("a")
 
 #opening file
-with open("data/raw-data.txt", "r") as f:
+with open("text.txt", "r") as f:
     for line in f:
         #finding lines with title of course 
         if line[0:3] == "CSE":
@@ -83,8 +97,8 @@ with open("data/raw-data.txt", "r") as f:
             courses.append(Course(name, desc, course_id, prereqs, off_w, level))            
 
 #print testing
-#for course in courses:
-#    print course.course_id + ": " + str(course.prereqs)
+for course in courses:
+    print course.course_id + ": " + str(course.prereqs)
 
 #Use of constructed data below 
 #==========================
@@ -132,7 +146,12 @@ for course in courses:
                     n.attr["fontsize"] = 8.0
                     
 
+<<<<<<< HEAD
 G.layout(prog="neato")
 G.draw("degree_graph.png")
+=======
+#G.layout()
+#G.draw("degree_graph.png")
+>>>>>>> cmd-line
 
 

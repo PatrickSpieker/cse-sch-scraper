@@ -11,7 +11,8 @@ Currently under development.
  * Works for any department at UW
 
 ###Usage
-Takes uppercase department code after main.py
+Takes uppercase department code after main.py.
+
 Department codes can be found at:
 http://www.washington.edu/about/academics/departments/
 ```bash

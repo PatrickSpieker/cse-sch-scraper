@@ -14,7 +14,7 @@ Currently under development.
 Takes uppercase department code after main.py
 Department codes can be found at:
 http://www.washington.edu/about/academics/departments/
-$ python main.py [dept-code]
+ $ python main.py [dept-code]
 
 Written in Python 2.
 

@@ -6,9 +6,9 @@ given UW department.
 
 Currently under development. 
 ###Features
-*Visualizes relationships between courses in a given UW department
-*Automatic prereq options set differentiation
-*Works for any department at UW
+ * Visualizes relationships between courses in a given UW department
+ * Automatic prereq options set differentiation
+ * Works for any department at UW
 
 ###Usage
 Takes uppercase department code after main.py

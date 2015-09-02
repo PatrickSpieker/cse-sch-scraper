@@ -1,5 +1,6 @@
+#importing:
+#regex, pygraphviz, requests, urllib, argv, and beautiful soup
 import re
-from pprint import pprint
 import pygraphviz as pgv
 import requests
 import urllib
@@ -8,61 +9,50 @@ from bs4 import BeautifulSoup
 
 class Course:
     """Template for course using data from text file"""
-    def __init__(self, name, desc, course_id, prereqs, off_w, level):
+    def __init__(self, name, course_id, prereqs, off_w):
         self.name = name
         self.course_id = course_id
         self.prereqs = prereqs
         self.off_w = off_w
-        self.desc = desc
-        self.level = level
 
 
 dept = str(argv[1])
-print dept.lower()
 
 #empty list for all Course objects
 courses = []
 url = "http://www.washington.edu/students/crscat/" + dept.lower() + ".html"
-print url
 #fetching HTML
 urllib.urlretrieve(url, "test.html")
 data = open("test.html","r").read()
 soup = BeautifulSoup(data, "lxml")
-links = soup.find_all("a")
+#constructing regex pattern
+patt = dept.lower()+"\d\d\d"
 
 #opening file
-with open("text.txt", "r") as f:
-    for line in f:
-        #finding lines with title of course 
-        if line[0:3] == "CSE":
-            #index of "("-1 is index of space after name
-            name = line[8:line.find("(")-1]
-            course_id = line[0:7]
+with open("test.html", "r") as f:
+    data = f.read()
+    soup = BeautifulSoup(data, "lxml")
+    for tag in soup.find_all("a", attrs={"name":re.compile(patt)}):
+        for child in tag.children:
 
-            #access line after line containing name; next line has description
-            next_line = next(f)
-
-            #finding index of character after "Prerequisite"
-            prereq_ind = next_line.find("Prerequisite: ")
+            #identifying where prereqs will be in text
+            prereq_start = str(child).find("Prerequisite: ")
             len_prereq = len("Prerequisite: ")
-            
-            #finding and assigning description
-            desc = next_line[:prereq_ind]
-            
-            #assigning level
-            level = line[4:5]
-            
-            #starting search for prereqs
+
+            #empty prereq list
             prereqs = []
-            #checking to see if any prereq's exist
-            #no they don't
-            if prereq_ind == -1:
+            #checking to see if prereqs exist
+            if prereq_start == -1:
+                #no they don't
                 prereqs = None
                 #off_w is offered with
                 off_w = None
-            #yes they do
             else:
-                final_part = next_line[prereq_ind+len_prereq:]
+                #yes they do
+                final_part = str(child)[prereq_start+len_prereq:]
+                prereq_end = final_part.find("<br/>")
+                final_part = final_part[:prereq_end]
+
                 final_part_list = final_part.split("Offered")
                 #all of these now must have prereq's
                 prereq_raw = final_part_list[0]
@@ -90,18 +80,23 @@ with open("text.txt", "r") as f:
                         #append EACH ITEM from the list of options
                         for j in p.findall(i):
                             prereqs.append(j)
+                            
 
                 #making prereqs immutable via tuple
                 prereqs = tuple(prereqs)
 
-            courses.append(Course(name, desc, course_id, prereqs, off_w, level))            
+            if child.b:
+                #defining string with course info
+                course_str = child.b.string
+                #finding index of end of course string
+                course_str_end = course_str.find("(")-1
+                #defining course id, ex: CSE 143
+                course_id = course_str[0:7]
+                #defining actual name of the course
+                name = course_str[8:course_str.find("(")-1]
+            #instantiate object
+            courses.append(Course(name, course_id, prereqs, off_w))            
 
-#print testing
-for course in courses:
-    print course.course_id + ": " + str(course.prereqs)
-
-#Use of constructed data below 
-#==========================
 
 #instantiating graph with pgv
 G = pgv.AGraph(directed=True, overlap = False, splines="polyline",
@@ -146,12 +141,6 @@ for course in courses:
                     n.attr["fontsize"] = 8.0
                     
 
-<<<<<<< HEAD
 G.layout(prog="neato")
 G.draw("degree_graph.png")
-=======
-#G.layout()
-#G.draw("degree_graph.png")
->>>>>>> cmd-line
-
 

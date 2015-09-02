@@ -9,6 +9,7 @@ Currently under development.
  * Visualizes relationships between courses in a given UW department
  * Automatic prereq options set differentiation
  * Works for any department at UW
+
 ###Installation
 ######Dependancies
  * BeautifulSoup 4.4.0

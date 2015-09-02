@@ -3,6 +3,7 @@ from pprint import pprint
 import pygraphviz as pgv
 import requests
 import urllib
+from sys import argv
 from bs4 import BeautifulSoup
 
 class Course:
@@ -15,17 +16,19 @@ class Course:
         self.desc = desc
         self.level = level
 
+
+dept = str(argv[1])
+print dept.lower()
+
 #empty list for all Course objects
 courses = []
-
+url = "http://www.washington.edu/students/crscat/" + dept.lower() + ".html"
+print url
 #fetching HTML
-urllib.urlretrieve("http://www.washington.edu/students/crscat/cse.html",
-        "test.html")
+urllib.urlretrieve(url, "test.html")
 data = open("test.html","r").read()
 soup = BeautifulSoup(data, "lxml")
 links = soup.find_all("a")
-for link in links:
-    pprint(link)
 
 #opening file
 with open("text.txt", "r") as f:

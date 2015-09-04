@@ -28,6 +28,7 @@ soup = BeautifulSoup(data, "lxml")
 #constructing regex pattern
 patt = dept.lower()+"\d\d\d"
 
+
 #opening file
 with open("test.html", "r") as f:
     data = f.read()
@@ -80,7 +81,6 @@ with open("test.html", "r") as f:
                         #append EACH ITEM from the list of options
                         for j in p.findall(i):
                             prereqs.append(j)
-                            
 
                 #making prereqs immutable via tuple
                 prereqs = tuple(prereqs)
@@ -90,8 +90,10 @@ with open("test.html", "r") as f:
                 course_str = child.b.string
                 #finding index of end of course string
                 course_str_end = course_str.find("(")-1
+                #finding length of course_id
+                id_end = len(dept.lower())+4 #length of space and number
                 #defining course id, ex: CSE 143
-                course_id = course_str[0:7]
+                course_id = course_str[0:id_end]
                 #defining actual name of the course
                 name = course_str[8:course_str.find("(")-1]
             #instantiate object
@@ -105,6 +107,7 @@ G = pgv.AGraph(directed=True, overlap = False, splines="polyline",
 
 #connecting courses with prereqs
 for course in courses:
+    print course.course_id
     #checking for prereqs
     if course.prereqs:
         #setting up counter to change color of edge ->
@@ -138,7 +141,7 @@ for course in courses:
                 #formatting both nodes
                 for node in (prereq, course.course_id):
                     n = G.get_node(node)
-                    n.attr["fontsize"] = 8.0
+                    n.attr["fontsize"] = 7.0
                     
 
 G.layout(prog="neato")

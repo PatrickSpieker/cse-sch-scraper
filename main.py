@@ -107,7 +107,6 @@ G = pgv.AGraph(directed=True, overlap = False, splines="polyline",
 
 #connecting courses with prereqs
 for course in courses:
-    print course.course_id
     #checking for prereqs
     if course.prereqs:
         #setting up counter to change color of edge ->

@@ -16,5 +16,6 @@ setup(
         ],
         packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
         install_requires=["pygraphviz","graphviz", "requests", "beautifulsoup4"],
-        )
+        scripts=['bin/uw-sch-scraper'],
+)
 

@@ -146,3 +146,4 @@ for course in courses:
 G.layout(prog="neato")
 G.draw("degree_graph.png")
 
+#if __name__ == "__

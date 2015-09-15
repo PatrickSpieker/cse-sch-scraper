@@ -18,15 +18,15 @@ Currently under development.
  * lxml 3.4.4
  * requests 2.7.0
  * wheel 0.24.0
+
 ######Installing Dependancies
-```bash
- * pip install wheel
- * pip install beautifulsoup
- * pip install graphviz
- * pip install pygraphviz
- * pip install requests
- * pip install lxml
-```
+ * ```pip install wheel```
+ * ```pip install beautifulsoup```
+ * ```pip install graphviz```
+ * ```pip install pygraphviz```
+ * ```pip install requests```
+ * ```pip install lxml```
+
 
    
 ###Usage
